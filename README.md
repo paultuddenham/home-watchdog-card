@@ -18,7 +18,11 @@ Tap any row to open that entity. When nothing is wrong the card says so in one l
 
 ## Install
 
-With HACS: open HACS, choose the three-dot menu, then Custom repositories. Add `https://github.com/paultuddenham/home-watchdog-card` as type Dashboard, then install Home Watchdog Card and reload the browser.
+With HACS, tap this and confirm your Home Assistant address:
+
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paultuddenham&repository=home-watchdog-card&category=plugin)
+
+Then press Download and reload the browser. If the button doesn't work for you, open HACS, choose the three-dot menu, then Custom repositories, and add `https://github.com/paultuddenham/home-watchdog-card` as type Dashboard.
 
 By hand: copy `home-watchdog-card.js` to `/config/www/`, then add `/local/home-watchdog-card.js` as a JavaScript module under Settings, Dashboards, Resources.
 
