@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Home Watchdog Card preview</title>
+<!-- Test page only: stands in for Home Assistant so the card can be seen and screenshotted. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+  body { margin: 0; padding: 24px; font-family: Roboto, "Segoe UI", system-ui, sans-serif; display: flex; gap: 24px; align-items: flex-start; }
+  .light { --primary-text-color: #212121; --secondary-text-color: #727272; --card-background-color: #fff; --secondary-background-color: #f0f0f0; background: #fafafa; }
+  .dark { --primary-text-color: #e1e1e1; --secondary-text-color: #9b9b9b; --card-background-color: #1c1c1c; --secondary-background-color: #2a2a2a; background: #111; }
+  .col { width: 380px; display: flex; flex-direction: column; gap: 24px; padding: 16px; border-radius: 16px; }
+</style>
+</head>
+<body>
+<div class="col light" id="light"></div>
+<div class="col dark" id="dark"></div>
+<script>
+  class HaCard extends HTMLElement {
+    connectedCallback() {
+      if (this.shadowRoot) return;
+      this.attachShadow({ mode: "open" }).innerHTML = `<style>:host{display:block;background:var(--card-background-color);color:var(--primary-text-color);border-radius:12px;border:1px solid rgba(127,127,127,.25);}</style><slot></slot>`;
+    }
+  }
+  class HaIcon extends HTMLElement {
+    connectedCallback() {
+      const name = (this.getAttribute("icon") || "").replace("mdi:", "");
+      if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+      this.shadowRoot.innerHTML = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css"><style>:host{display:inline-flex}i{font-size:var(--mdc-icon-size,24px);line-height:1}</style><i class="mdi mdi-${name}"></i>`;
+    }
+  }
+  customElements.define("ha-card", HaCard);
+  customElements.define("ha-icon", HaIcon);
+</script>
+<script src="../home-watchdog-card.js"></script>
+<script type="module">
+  import { mockHass, NOW } from "./mock-hass.mjs";
+  Date.now = () => NOW;
+  const events = [];
+  for (const col of ["light", "dark"]) {
+    const host = document.getElementById(col);
+    const a = document.createElement("home-watchdog-card");
+    a.setConfig({ title: "Needs attention", battery_threshold: 30, exclude: ["platform:mobile_app"] });
+    a.hass = mockHass();
+    a.addEventListener("hass-more-info", (e) => events.push(e.detail.entityId));
+    host.appendChild(a);
+    const b = document.createElement("home-watchdog-card");
+    b.setConfig({ title: "Needs attention" });
+    b.hass = mockHass({ healthy: true });
+    host.appendChild(b);
+  }
+  window.__events = events;
+  window.__ready = true;
+</script>
+</body>
+</html>

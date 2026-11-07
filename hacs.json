@@ -1,0 +1,6 @@
+{
+  "name": "Home Watchdog Card",
+  "filename": "home-watchdog-card.js",
+  "content_in_root": true,
+  "homeassistant": "2024.8.0"
+}
