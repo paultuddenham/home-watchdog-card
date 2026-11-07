@@ -36,13 +36,14 @@ min_offline_minutes: 10      # ignore drops shorter than this
 max_items: 8                 # per list; the rest show as "and 3 more"
 show_offline: true
 show_batteries: true
+show_browsers: false         # Browser Mod tabs, hidden by default
 exclude:                     # entity ids, device names or platforms; * is a wildcard
   - sensor.*_phone_battery*
   - Old garage sensor
   - platform:mobile_app
 ```
 
-Entities you have hidden in Home Assistant are skipped already.
+Entities you have hidden in Home Assistant are skipped already. So are the browser tabs Browser Mod registers as devices, because a closed tab would otherwise sit on the list as offline forever.
 
 ## Getting told on your phone
 

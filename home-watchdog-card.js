@@ -13,6 +13,7 @@ const DEFAULTS = {
   min_offline_minutes: 10,
   show_offline: true,
   show_batteries: true,
+  show_browsers: false,
   max_items: 8,
   exclude: [],
 };
@@ -71,9 +72,12 @@ function computeWatch(hass, cfg, now = Date.now()) {
     const s = states[eid];
     return (s && s.attributes && s.attributes.friendly_name) || eid;
   };
+  // Browser Mod registers every browser tab as a device; closed tabs would read as offline devices.
+  const isBrowser = (e) => !c.show_browsers && e && e.platform === "browser_mod";
   const skip = (eid) => {
     const e = reg[eid];
     if (e && e.hidden) return true;
+    if (isBrowser(e)) return true;
     const dev = e && e.device_id;
     return excluded(eid, friendly(eid), dev && deviceName(dev), e && e.platform && `platform:${e.platform}`);
   };
@@ -82,7 +86,7 @@ function computeWatch(hass, cfg, now = Date.now()) {
   const byDevice = {};
   for (const eid of Object.keys(states)) {
     const e = reg[eid];
-    if (!e || !e.device_id) continue;
+    if (!e || !e.device_id || isBrowser(e)) continue;
     (byDevice[e.device_id] = byDevice[e.device_id] || []).push(eid);
   }
   const offline = [];
@@ -157,6 +161,7 @@ class HomeWatchdogCard extends HTMLElement {
         { name: "max_items", selector: { number: { min: 1, max: 50, step: 1, mode: "box" } } },
         { name: "show_offline", selector: { boolean: {} } },
         { name: "show_batteries", selector: { boolean: {} } },
+        { name: "show_browsers", selector: { boolean: {} } },
         { name: "exclude", selector: { text: { multiple: true } } },
       ],
       computeLabel: (s) => ({
@@ -166,6 +171,7 @@ class HomeWatchdogCard extends HTMLElement {
         max_items: "Most rows per list",
         show_offline: "Show offline devices",
         show_batteries: "Show batteries",
+        show_browsers: "Include Browser Mod browsers",
         exclude: "Ignore (entity id, device name, platform:<name>; * works as a wildcard)",
       }[s.name]),
     };

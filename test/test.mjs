@@ -84,6 +84,14 @@ t("names are not trusted as HTML (escaped at render)", () => {
   assert.ok(src.includes("esc(r.name)") && src.includes("esc(r.detail)"));
 });
 
+t("Browser Mod tabs are ignored unless show_browsers is on", () => {
+  const w = compute(hass, {}, NOW);
+  assert.ok(!w.offline.some((r) => r.name.startsWith("browser_mod_")));
+  assert.ok(!w.silent.some((r) => r.name.startsWith("browser_mod_")));
+  const on = compute(hass, { show_browsers: true }, NOW);
+  assert.ok(on.offline.some((r) => r.name.startsWith("browser_mod_")));
+});
+
 t("all clear when nothing is wrong", () => {
   const h = mockHass({ healthy: true });
   const w = compute(h, {}, NOW);

@@ -51,6 +51,10 @@ export function mockHass({ healthy = false } = {}) {
   add("sensor.pauls_phone_battery_level", "41", batt("Phone"), { device_id: "d_phone", platform: "mobile_app" });
   add("sensor.bathroom_humidity", "64", { device_class: "humidity" }, { device_id: "d_bath" });
   add("sensor.bathroom_humidity_battery", "100", batt("Bathroom"), { device_id: "d_bath", entity_category: "diagnostic" });
+  // a Browser Mod tab that was closed days ago: always unavailable, even in a healthy home
+  dev("d_tab", "browser_mod_59244b4b_af48e86f", null);
+  add("binary_sensor.browser_mod_59244b4b_af48e86f", "unavailable", {}, { device_id: "d_tab", platform: "browser_mod" }, 6 * 24 * 60);
+  add("sensor.browser_mod_59244b4b_af48e86f_browser_battery", "unavailable", batt("Tab"), { device_id: "d_tab", platform: "browser_mod" }, 6 * 24 * 60);
   add("sun.sun", "above_horizon", {}, {});
   delete entities["sun.sun"].device_id;
 
