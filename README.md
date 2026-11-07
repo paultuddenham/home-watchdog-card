@@ -4,7 +4,7 @@ A Home Assistant dashboard card that lists what needs a look right now: devices 
 
 ![Home Watchdog Card in light and dark themes](images/light-and-dark.png)
 
-[PAUL: one or two lines in your own words on why you made it, e.g. the device that went quiet without you noticing. Delete this bracket before publishing.]
+I made it because things in my own house kept going quiet without me noticing. The first time I ran it on my dashboard it found a balcony light sensor and a voice satellite that had both been offline for six days, and a motion sensor down to 5%.
 
 ## What it shows
 
